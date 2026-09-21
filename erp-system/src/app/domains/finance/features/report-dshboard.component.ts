@@ -1,18 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FinanceReportService } from '../data-access/finance-report.service';
+import { SharedButtonComponent } from '../../../shared/ui/shared-button.component';
 
 @Component({
   selector: 'app-report-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SharedButtonComponent],
   template: `
     <div class="dashboard">
       <h2>Finanzbericht & Aggregation</h2>
 
-      <button (click)="loadData()" [disabled]="financeService.isLoading()">
+      <app-shared-button [disabled]="financeService.isLoading()" (clicked)="loadData()">
         {{ financeService.isLoading() ? 'Lade Daten...' : 'Bericht generieren' }}
-      </button>
+      </app-shared-button>
 
       <!-- Rendering der Daten basierend auf Signals -->
       @if (financeService.reportData().length > 0) {
