@@ -4,7 +4,7 @@ import { Component, input, output } from '@angular/core';
   selector: 'app-shared-button',
   standalone: true,
   template: `
-    <!-- Wir nutzen die Signal-Inputs für das Binding und triggern das Output-Event beim Klick -->
+    <!-- Hier wird Signal-Inputs genutzt, für das Binding und triggern des Output-Event beim Klick -->
     <button [disabled]="disabled()" (click)="clicked.emit()" class="btn">
       <ng-content></ng-content>
       <!-- Hier wird der Text von außen injiziert -->

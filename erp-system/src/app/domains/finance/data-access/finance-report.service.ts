@@ -36,7 +36,7 @@ export class FinanceReportService {
   generateReport() {
     this.isLoading.set(true);
 
-    // Wir simulieren einen asynchronen API-Aufruf (Performance-Fokus)
+    //Hier wird ein asynchronen API-Aufruf simuliert (Performance-Fokus)
     setTimeout(() => {
       const report: FinanceReportEntry[] = this.mockInventory.map((item) => {
         // Filtere Sales für dieses Produkt
