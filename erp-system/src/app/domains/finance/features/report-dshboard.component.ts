@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FinanceReportService } from '../data-access/finance-report.service';
+import { FinanceStore } from '../data-access/finance.store';
 import { SharedButtonComponent } from '../../../shared/ui/shared-button.component';
 
 @Component({
@@ -9,14 +9,17 @@ import { SharedButtonComponent } from '../../../shared/ui/shared-button.componen
   imports: [CommonModule, SharedButtonComponent],
   template: `
     <div class="dashboard">
-      <h2>Finanzbericht & Aggregation</h2>
+      <h2>Finanzbericht & Aggregation (NgRx SignalStore)</h2>
 
-      <app-shared-button [disabled]="financeService.isLoading()" (clicked)="loadData()">
-        {{ financeService.isLoading() ? 'Lade Daten...' : 'Bericht generieren' }}
+      <!-- Der Store stellt uns direkt die Signals zur Verfügung -->
+      <app-shared-button
+        [disabled]="financeStore.isLoading()"
+        (clicked)="financeStore.loadReport()"
+      >
+        {{ financeStore.isLoading() ? 'Lade Daten (simuliert)...' : 'Bericht generieren' }}
       </app-shared-button>
 
-      <!-- Rendering der Daten basierend auf Signals -->
-      @if (financeService.reportData().length > 0) {
+      @if (financeStore.reportData().length > 0) {
         <table>
           <thead>
             <tr>
@@ -27,7 +30,7 @@ import { SharedButtonComponent } from '../../../shared/ui/shared-button.componen
             </tr>
           </thead>
           <tbody>
-            @for (entry of financeService.reportData(); track entry.productName) {
+            @for (entry of financeStore.reportData(); track entry.productName) {
               <tr>
                 <td>{{ entry.productName }}</td>
                 <td>{{ entry.totalSales }}</td>
@@ -37,13 +40,17 @@ import { SharedButtonComponent } from '../../../shared/ui/shared-button.componen
             }
           </tbody>
         </table>
-      } @else if (!financeService.isLoading()) {
-        <p>Klicke auf "Bericht generieren", um die Daten aus Sales und Inventory zu verknüpfen.</p>
+      } @else if (!financeStore.isLoading()) {
+        <p>Klicke auf "Bericht generieren", um die Daten abzurufen.</p>
       }
     </div>
   `,
   styles: [
     `
+      .dashboard {
+        font-family: sans-serif;
+        padding: 20px;
+      }
       table {
         width: 100%;
         border-collapse: collapse;
@@ -58,30 +65,10 @@ import { SharedButtonComponent } from '../../../shared/ui/shared-button.componen
       th {
         background-color: #f2f2f2;
       }
-      button {
-        padding: 10px 15px;
-        cursor: pointer;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-      }
-      button:disabled {
-        background: #ccc;
-      }
     `,
   ],
 })
-export class ReportDashboardComponent implements OnInit {
-  // Service via Dependency Injection laden
-  financeService = inject(FinanceReportService);
-
-  ngOnInit() {
-    // Optional: Direkt beim Starten laden
-    // this.loadData();
-  }
-
-  loadData() {
-    this.financeService.generateReport();
-  }
+export class ReportDashboardComponent {
+  // Store per Dependency Injection laden
+  financeStore = inject(FinanceStore);
 }
